@@ -51,8 +51,8 @@ public class TBlog implements Serializable {
     @ApiModelProperty(value = "是否开启评论")
     private Boolean commentabled;
 
-    @ApiModelProperty(value = "
-创建时间")
+    @ApiModelProperty(value = "创建时间")
+
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "是否可以回复")
