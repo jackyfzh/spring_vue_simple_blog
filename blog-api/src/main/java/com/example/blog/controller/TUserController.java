@@ -2,6 +2,7 @@ package com.example.blog.controller;
 
 
 import com.example.blog.service.TUserService;
+import com.example.blog.util.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +26,9 @@ public class TUserController {
     @Autowired
     TUserService tUserService;
 
-    @GetMapping("/{id}") // 路由配置
-    public Object test(@PathVariable("id") Long id) {
-        return tUserService.getById(id);
+    @GetMapping("/hello")
+    public RespBean test() {
+        return RespBean.ok("hello");
     }
 
 }
