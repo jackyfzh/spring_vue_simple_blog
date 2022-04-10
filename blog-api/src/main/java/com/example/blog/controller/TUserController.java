@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2022-04-08
  */
 @RestController
-@RequestMapping("/t-user")
 public class TUserController {
 
     // 获取数据库
