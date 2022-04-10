@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Accessors(chain = true)
 @ApiModel(value="TUser对象", description="")
 public class TUser implements Serializable,UserDetails {
+
     private static final long serialVersionUID = 1L;
     @ApiModelProperty(value = "用户id")
     private Long id;
@@ -51,9 +52,7 @@ public class TUser implements Serializable,UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
     public boolean isAccountNonLocked() {
