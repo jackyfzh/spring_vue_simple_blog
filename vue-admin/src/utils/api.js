@@ -11,11 +11,11 @@ axios.interceptors.response.use(success => { // 成功处理
         Message.success({message: success.data.msg}) // 后端正确提示
     }
     return success.data
-},error =>{ // 失败处理
+},error =>{ // 错误处理
     if(error.response.status == 504 || error.response.status == 404){
         Message.error({message: "504/404 无法访问"})
     }else if(error.response.status == 403){
-        Message.error({message: "403 无权访问"})
+        Message.error({message: "403 拒绝访问"})
     }else if(error.response.status == 401){
         Message.error({message: "401 尚未登录"})
         router.replace('/')
@@ -33,7 +33,6 @@ axios.interceptors.response.use(success => { // 成功处理
 // 封装请求
 let base = ''; 
 export const postKeyValueRequest=(url,params)=>{
-
     return axios({
         method: 'post',  
         url: `${base}${url}`, // 引用变量
@@ -51,8 +50,37 @@ export const postKeyValueRequest=(url,params)=>{
         headers:{
             'Content-Type':'application/x-www-form-urlencoded '
         }
-
     })
-
 }
 
+export const postRequest=(url, params)=>{
+    return axios({
+        method: 'post',
+        url: `${base}${url}`,
+        data: params  
+    })
+}
+
+export const putRequest=(url, params)=>{
+    return axios({
+        method: 'put',
+        url: `${base}${url}`,
+        data: params 
+    })
+}
+
+export const getRequest=(url, params)=>{
+    return axios({
+        method: 'get',
+        url: `${base}${url}`,
+        data: params //这是用json来传递的，所以不用加transformRequest转换了
+    })
+}
+
+export const deleteRequest=(url, params)=>{
+    return axios({
+        method: 'delete',
+        url: `${base}${url}`,
+        data: params //这是用json来传递的，所以不用加transformRequest转换了
+    })
+}
