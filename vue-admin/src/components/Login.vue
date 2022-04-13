@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-form :rules="rules" :model="loginForm" class="loginContainer" ref="loginForm">
-            <h3 class="loginTitle">博客后台系统登录</h3>
+            <h3 class="loginTitle">Jacky的个人博客后台登录</h3>
             <el-form-item prop="username">
                 <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="用户名" @keydown.enter.native="submitLogin"></el-input>
             </el-form-item>

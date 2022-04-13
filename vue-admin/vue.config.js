@@ -14,6 +14,10 @@ module.exports = {
     devServer:{  //配置开发环境
         host: 'localhost', // 端口号
         port: 4000,
-        proxy: proxyObj  // 代理对象
+        proxy: proxyObj,  // 代理对象
+        allowedHosts: [
+            'jblog.free.tryzth.com',
+            'localhost:4001',
+        ]
     }
 }
