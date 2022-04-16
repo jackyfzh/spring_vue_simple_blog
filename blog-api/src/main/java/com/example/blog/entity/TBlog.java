@@ -2,6 +2,8 @@ package com.example.blog.entity;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -51,8 +53,8 @@ public class TBlog implements Serializable {
     @ApiModelProperty(value = "是否开启评论")
     private Boolean commentabled;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/ShangHai")
     @ApiModelProperty(value = "创建时间")
-
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "是否可以回复")
@@ -61,6 +63,7 @@ public class TBlog implements Serializable {
     @ApiModelProperty(value = "是否已发布")
     private Boolean shareStatement;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/ShangHai")
     @ApiModelProperty(value = "更新时间")
     private LocalDateTime updateTime;
 
