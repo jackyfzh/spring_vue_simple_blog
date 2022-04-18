@@ -1,16 +1,16 @@
 package com.example.blog.controller;
 
 
+import com.example.blog.form.BlogForm;
 import com.example.blog.service.TBlogService;
 import com.example.blog.util.RespBean;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.util.HashMap;
 
 /**
  * <p>
@@ -59,5 +59,28 @@ public class TBlogController {
     @ApiImplicitParam(name = "title",value = "文章的标题")
     public RespBean findByTitle(String title){
         return tBlogService.getByTitle(title);
+    }
+
+    // 保存文章
+    @PostMapping("/saveBT")
+    public RespBean saveBlogTag(@RequestBody HashMap<String,Object> params) {
+        RespBean check = BlogForm.check(params);
+        if (check.getStatus() == 500) {
+            return check;
+        }else {
+            return tBlogService.saveBT(params);
+        }
+    }
+
+    // 保存草稿
+    @PostMapping("/temporarySave")
+    public RespBean temporarySave(@RequestBody HashMap<String,Object> params){
+        RespBean checkTemporaryBlog = BlogForm.checkTemporaryBlog(params);
+        if (checkTemporaryBlog.getStatus() == 500) {
+            return checkTemporaryBlog;
+        }
+        else {
+            return tBlogService.temporarySave(params);
+        }
     }
 }

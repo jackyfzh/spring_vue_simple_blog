@@ -2,14 +2,20 @@ package com.example.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.blog.entity.TBlog;
-import com.example.blog.mapper.TBlogMapper;
-import com.example.blog.service.TBlogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.blog.entity.TBlog;
+import com.example.blog.entity.TBlogTags;
+import com.example.blog.entity.TTag;
+import com.example.blog.mapper.TBlogMapper;
+import com.example.blog.mapper.TBlogTagsMapper;
+import com.example.blog.mapper.TTagMapper;
+import com.example.blog.service.TBlogService;
 import com.example.blog.util.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,11 +26,16 @@ import java.util.List;
  * @author Jackyfeng
  * @since 2022-04-08
  */
+@Transactional(rollbackFor=Exception.class)  // 开启事务
 @Service
 public class TBlogServiceImpl extends ServiceImpl<TBlogMapper, TBlog> implements TBlogService {
 
     @Autowired
     TBlogMapper tBlogMapper;
+    @Autowired
+    TTagMapper tTagMapper;
+    @Autowired
+    TBlogTagsMapper tBlogTagsMapper;
     RespBean respBean = RespBean.build();
 
     @Override
@@ -71,6 +82,63 @@ public class TBlogServiceImpl extends ServiceImpl<TBlogMapper, TBlog> implements
         List<TBlog> tBlogList = tBlogMapper.selectList(queryWrapper);
         respBean.setStatus(200);
         respBean.setObj(tBlogList);
+        return respBean;
+    }
+
+    @Override
+    public RespBean saveBT(HashMap<String, Object> params) {
+        // 保存博客
+        RespBean respBean = RespBean.build();
+        TBlog tBlog = new TBlog();
+        tBlog.setTitle((String) params.get("title"));
+        tBlog.setDescription((String) params.get("description"));
+        tBlog.setFirstPicture((String) params.get("first_picture"));
+        tBlog.setContent((String) params.get("content"));
+        tBlog.setTypeId(Long.parseLong(params.get("type_id").toString()));
+        tBlog.setFlag((String) params.get("flag"));
+        tBlog.setPublished(Boolean.valueOf(params.get("published").toString()));
+        tBlog.setShareStatement(true); // 设置状态为已发布
+        // 保存文章
+        int result_blog = tBlogMapper.insert(tBlog);
+        int result_tag = 0;
+        int resule_bt = 0;
+        List<String> tags = (List) params.get("tags");
+        for (String tag: tags) {
+            TTag tTag = new TTag();
+            tTag.setName(tag);
+            // 保存关键词
+            result_tag = tTagMapper.insert(tTag);
+            TBlogTags tBlogTags = new TBlogTags();
+            tBlogTags.setBlogsId(tBlog.getId());
+            tBlogTags.setTagsId(tTag.getId());
+            resule_bt = tBlogTagsMapper.insert(tBlogTags);
+        }
+        if (result_blog != 0 && result_tag != 0 && resule_bt !=0){
+            respBean.setStatus(200);
+            respBean.setMsg("添加成功！");
+            return respBean;
+        }
+        respBean.setMsg("添加失败");
+        return respBean;
+    }
+
+    @Override
+    public RespBean temporarySave(HashMap<String, Object> params) {
+        // 暂存博客草稿
+        RespBean respBean = RespBean.build();
+        TBlog tBlog = new TBlog();
+        tBlog.setTitle((String) params.get("title"));
+        tBlog.setDescription((String) params.get("description"));
+        tBlog.setFirstPicture((String) params.get("first_picture"));
+        tBlog.setContent((String) params.get("content"));
+        // 保存文章
+        int result_blog = tBlogMapper.insert(tBlog);
+        if (result_blog != 0){
+            respBean.setStatus(200);
+            respBean.setMsg("添加成功！");
+            return respBean;
+        }
+        respBean.setMsg("添加失败");
         return respBean;
     }
 }
