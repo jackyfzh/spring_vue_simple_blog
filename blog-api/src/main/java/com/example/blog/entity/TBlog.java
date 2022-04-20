@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,6 +28,7 @@ public class TBlog implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "博客id")
     private Long id;
 
@@ -70,12 +73,15 @@ public class TBlog implements Serializable {
     @ApiModelProperty(value = "浏览量")
     private Integer views;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "分类id")
     private Long typeId;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "用户id")
     private Long userId;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "评论次数")
     private Long commentCount;
 

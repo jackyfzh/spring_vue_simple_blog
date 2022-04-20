@@ -1,6 +1,7 @@
 package com.example.blog.controller;
 
 
+import com.example.blog.entity.TBlog;
 import com.example.blog.form.BlogForm;
 import com.example.blog.service.TBlogService;
 import com.example.blog.util.RespBean;
@@ -82,5 +83,53 @@ public class TBlogController {
         else {
             return tBlogService.temporarySave(params);
         }
+    }
+
+    @PutMapping("/updateBlog")
+    public RespBean updateBlog(@RequestBody HashMap<String,Object> params){
+        RespBean checkUpdateBlog = BlogForm.check(params);
+        if (checkUpdateBlog.getStatus() == 500) {
+            return checkUpdateBlog;
+        }
+        else {
+            return tBlogService.updateBlog(params);
+        }
+    }
+
+    @DeleteMapping("/logicDeleteBlog")
+    public RespBean logicDeleteBlog(String id){
+        TBlog tBlog = tBlogService.getById(id);
+        if (tBlog != null){
+            return tBlogService.logicDeleteBlog(id);
+        }else {
+            respBean.setStatus(500);
+            respBean.setMsg("没有数据");
+            return respBean;
+        }
+    }
+
+    @DeleteMapping("/deleteBlog")
+    public RespBean deleteBlog(String id){
+        TBlog tBlog = tBlogService.getById(id);
+        if (tBlog != null){
+            return tBlogService.deleteBT(id);
+        }else {
+            respBean.setStatus(500);
+            respBean.setMsg("没有数据");
+            return respBean;
+        }
+    }
+
+    @GetMapping("/recoveryBlog")
+    public RespBean recoveryBlog(String id){
+        return tBlogService.recoveryBlog(id);
+    }
+
+    @GetMapping("/getByBlogId")
+    public RespBean getByBlogId(String id){
+        respBean.setStatus(200);
+        respBean.setMsg("查询成功");
+        respBean.setObj(tBlogService.getById(id));
+        return respBean;
     }
 }

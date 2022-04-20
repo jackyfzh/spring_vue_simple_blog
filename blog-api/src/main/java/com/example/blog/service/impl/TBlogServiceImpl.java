@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class TBlogServiceImpl extends ServiceImpl<TBlogMapper, TBlog> implements
     TTagMapper tTagMapper;
     @Autowired
     TBlogTagsMapper tBlogTagsMapper;
+
     RespBean respBean = RespBean.build();
 
     @Override
@@ -139,6 +141,135 @@ public class TBlogServiceImpl extends ServiceImpl<TBlogMapper, TBlog> implements
             return respBean;
         }
         respBean.setMsg("添加失败");
+        return respBean;
+    }
+
+    @Override
+    public RespBean updateBlog(HashMap<String, Object> params) {
+        RespBean respBean = RespBean.build();
+        // 根据id查询文章
+        TBlog tBlog = tBlogMapper.selectById(Long.parseLong(params.get("id").toString()));
+        tBlog.setTitle((String) params.get("title"));
+        tBlog.setDescription((String) params.get("description"));
+        tBlog.setFirstPicture((String) params.get("first_picture"));
+        tBlog.setContent((String) params.get("content"));
+        tBlog.setTypeId(Long.parseLong(params.get("type_id").toString()));
+        tBlog.setFlag((String) params.get("flag"));
+        tBlog.setPublished(Boolean.valueOf(params.get("published").toString()));
+        tBlog.setUpdateTime(LocalDateTime.now());
+        // 更新文章
+        int result_blog = tBlogMapper.updateById(tBlog);
+        int result_tag = 0;
+        int resule_bt = 0;
+        // 删除标签与记录
+        QueryWrapper<TBlogTags> queryWrapper1 = new QueryWrapper<TBlogTags>();
+        queryWrapper1.eq("blogs_id",tBlog.getId());
+        List<TBlogTags> blogTagsList =  tBlogTagsMapper.selectList(queryWrapper1);
+        for (TBlogTags bt : blogTagsList) {
+            // 删除标签表的数据
+            tTagMapper.deleteById(bt.getTagsId());
+            // 删除博客标签关联表的数据
+            QueryWrapper<TBlogTags> queryWrapper = new QueryWrapper<TBlogTags>();
+            queryWrapper.eq("tags_id",bt.getTagsId());
+            // 删除博客标签关联表的数据
+            tBlogTagsMapper.delete(queryWrapper);
+        }
+        // 重新添加标签
+        List<String> tags = (List) params.get("tags");
+        for (String tag : tags) {
+            // 保存标签
+            TTag tTag = new TTag();
+            tTag.setName(tag);
+            result_tag = tTagMapper.insert(tTag);
+            // 保存中间表记录
+            TBlogTags tBlogTags = new TBlogTags();
+            tBlogTags.setBlogsId(tBlog.getId());
+            tBlogTags.setTagsId(tTag.getId());
+            resule_bt = tBlogTagsMapper.insert(tBlogTags);
+        }
+        if (result_blog != 0 && result_tag != 0 && resule_bt !=0){
+            respBean.setStatus(200);
+            respBean.setMsg("更新博客成功！");
+            return respBean;
+        }
+        respBean.setMsg("更新博客失败");
+        return respBean;
+    }
+
+    @Override
+    public RespBean logicDeleteBlog(String id) {
+        RespBean respBean = RespBean.build();
+        TBlog tBlog = tBlogMapper.selectById(id);
+        if (tBlog != null){
+            tBlog.setIsDelete(true);
+            tBlog.setUpdateTime(LocalDateTime.now());
+            tBlogMapper.updateById(tBlog);
+            respBean.setStatus(200);
+            respBean.setMsg("删除博客成功！");
+            return respBean;
+        }else {
+            respBean.setStatus(500);
+            respBean.setMsg("删除博客失败");
+            return respBean;
+        }
+    }
+
+    @Override
+    public RespBean deleteBT(String id) {
+        RespBean respBean = RespBean.build();
+        TBlog tBlog = tBlogMapper.selectById(id);
+        // 删除标签和中间表记录
+        QueryWrapper<TBlogTags> queryWrapper1 = new QueryWrapper<TBlogTags>();
+        queryWrapper1.eq("blogs_id",tBlog.getId());
+        List<TBlogTags> blogTagsList =  tBlogTagsMapper.selectList(queryWrapper1);
+        int r_tag = 0;
+        int r_blog_tag = 0;
+        for (TBlogTags bt : blogTagsList) {
+            // 删除标签表的数据
+            r_tag = tTagMapper.deleteById(bt.getTagsId());
+            //删除博客标签关联表的数据
+            QueryWrapper<TBlogTags> queryWrapper = new QueryWrapper<TBlogTags>();
+            queryWrapper.eq("tags_id",bt.getTagsId());
+            // 删除博客标签关联表的数据
+            r_blog_tag = tBlogTagsMapper.delete(queryWrapper);
+        }
+        // 删除博客文章
+        int r_blog = tBlogMapper.deleteById(id);
+        if (r_tag != 0 && r_blog_tag!= 0 && r_blog!= 0){
+            respBean.setStatus(200);
+            respBean.setMsg("删除博客和标签成功");
+            return respBean;
+        }else {
+            respBean.setStatus(500);
+            respBean.setMsg("删除博客和标签失败");
+            return respBean;
+        }
+
+    }
+
+    @Override
+    public RespBean recoveryBlog(String id) {
+        RespBean respBean = RespBean.build();
+        TBlog tBlog = tBlogMapper.selectById(id);
+        if (tBlog != null){
+            tBlog.setIsDelete(false);
+            tBlog.setUpdateTime(LocalDateTime.now());
+            tBlogMapper.updateById(tBlog);
+            respBean.setStatus(200);
+            respBean.setMsg("还原博客成功！");
+            return respBean;
+        }else {
+            respBean.setStatus(500);
+            respBean.setMsg("还原博客失败");
+            return respBean;
+        }
+    }
+
+    @Override
+    public RespBean getByBlogId(String id) {
+        RespBean respBean = RespBean.build();
+        respBean.setStatus(200);
+        respBean.setObj(tBlogMapper.getByBlogId(id));
         return respBean;
     }
 }

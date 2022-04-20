@@ -23,4 +23,14 @@ public interface TBlogService extends IService<TBlog> {
     RespBean saveBT(HashMap<String, Object> params);
     // 暂时保存博客
     RespBean temporarySave(HashMap<String, Object> params);
+    // 更新博客
+    RespBean updateBlog(HashMap<String,Object> params);
+    // 逻辑删除博客
+    RespBean logicDeleteBlog(String id);
+    // 彻底删除博客和标签
+    RespBean deleteBT(String id);
+    // 还原博客
+    RespBean recoveryBlog(String id);
+    // 根据博客id查询
+    RespBean getByBlogId(String id);
 }
