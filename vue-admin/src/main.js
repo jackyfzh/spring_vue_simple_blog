@@ -9,6 +9,8 @@ import {postRequest} from "./utils/api";
 import {putRequest} from "./utils/api";
 import {getRequest} from "./utils/api";
 import {deleteRequest} from "./utils/api";
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 
 Vue.prototype.postKeyValueRequest = postKeyValueRequest;
 Vue.prototype.postRequest = postRequest;
@@ -16,6 +18,8 @@ Vue.prototype.putRequest = putRequest;
 Vue.prototype.getRequest = getRequest;
 Vue.prototype.deleteRequest = deleteRequest;
 Vue.config.productionTip = false
+
+Vue.use(mavonEditor);
 Vue.use(ElementUI);
 
 router.beforeEach((to,from,next)=>{
