@@ -36,10 +36,10 @@ public class BlogForm {
         }else if (StringUtils.isEmpty(content)) {
             info.setStatus(500);
             info.setMsg("content 不能为空");
-        }else if (tags.size() == 0) {
+        }/*else if (tags.size() == 0) {
             info.setStatus(500);
             info.setMsg("tags 不能为空");
-        }else if (type_id == null) {
+        }*/else if (type_id == null) {
             info.setStatus(500);
             info.setMsg("type_id 不能为空");
         }else if (StringUtils.isEmpty(flag)) {

@@ -18,11 +18,10 @@
         <result column="update_time" property="updateTime"/>
         <result column="is_delete" property="isDelete"/>
         <!-- 外键映射 -->
-        <collection column="t_blog_tags" property="tBlogTags" ofType="com.example.blog.entity.TBlogTags" javaType="java.util.List">
-            <result column="blogsId" property="blogsId"/>
+        <collection property="tBlogTags" ofType="com.example.blog.entity.TBlogTags" javaType="com.example.blog.entity.TTag">
             <association property="tTag" javaType="com.example.blog.entity.TTag">
-                <id column="id" property="id"/>
-                <result column="name" property="name"/>
+                <result column="tags_id" property="id"/>
+                <result column="tags_name" property="name"/>
             </association>
         </collection>
     </resultMap>
