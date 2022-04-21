@@ -9,6 +9,7 @@ import CategoryBlog from '../views/blogs/CategoryBlog'
 import TagBlog from '../views/blogs/TagBlog'
 import CommentBlog from '../views/blogs/CommentBlog'
 import LinksBlog from '../views/blogs/LinksBlog'
+import EditBlog from '../views/blogs/EditBlog'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,7 @@ const routes = [
     component: Home,
     children:[
       { path: '/admin/writeblog', name: '写博客',  component: WriteBlog  },
+      { path: '/admin/editblog/:id', name: '编辑博客',  component: EditBlog, props: true, hidden: true },
       { path: '/admin/allblogs', name: '文章管理',  component: AllBlogs  },
       { path: '/admin/categoryblog', name: '分类专栏',  component: CategoryBlog  },
       { path: '/admin/tagblog', name: '标签管理',  component: TagBlog  },

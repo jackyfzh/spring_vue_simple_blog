@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "axios": "^0.26.1",
-    "mavon-editor": "^2.10.4"
-  }
-}

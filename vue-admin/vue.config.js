@@ -11,7 +11,8 @@ proxyObj['/'] = {
 }
 // 应用导出
 module.exports = {
-    devServer:{  //配置开发环境
+    publicPath: './',
+    devServer:{  // 配置开发环境
         host: 'localhost', // 端口号
         port: 4000,
         proxy: proxyObj,  // 代理对象
