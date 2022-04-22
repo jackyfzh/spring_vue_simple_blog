@@ -2,6 +2,7 @@ package com.example.blog.service;
 
 import com.example.blog.entity.TTag;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.blog.util.RespBean;
 
 /**
  * <p>
@@ -13,4 +14,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface TTagService extends IService<TTag> {
 
+    RespBean pageTags(Long current, Long size);
+
+    RespBean getTagByName(String name);
+
+    RespBean updateTag(TTag tTag);
+
+    RespBean deleteTagById(Long id);
+
+    RespBean getTagById(Long id);
 }
