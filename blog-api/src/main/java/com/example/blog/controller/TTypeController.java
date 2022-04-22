@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.example.blog.entity.TType;
 import com.example.blog.service.TTypeService;
 import com.example.blog.util.RespBean;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +31,11 @@ public class TTypeController {
 
     RespBean respBean = RespBean.build();
 
+    /**
+     * 保存分类专栏
+     * @param tType
+     * @return
+     */
     @PostMapping("/saveType")
     public RespBean saveType(@RequestBody TType tType){
         if (StringUtils.isEmpty(tType.getName())){
@@ -53,12 +61,77 @@ public class TTypeController {
             respBean.setMsg("添加失败！");
             return respBean;
         }
+
     }
 
+    /**
+     * 查询所有分类
+     * @return
+     */
     @GetMapping("/getAllType")
     public RespBean getAllType(){
         List<TType> typeList = tTypeService.list();
         return RespBean.ok("查询成功！",typeList);
+    }
+
+    /**
+     * 分类的分页查询
+     * @param current
+     * @param size
+     * @return
+     */
+    @GetMapping("/getTypeByPage")
+    @ApiOperation("分类的分页查询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "current",value = "当前页") ,
+            @ApiImplicitParam(name = "size",value = "每页的数量"),
+    })
+    public RespBean getByPage(Long current, Long size){
+        return tTypeService.pageTypes(current, size);
+    }
+
+    /**
+     * 通过名称查找分类
+     * @param name
+     * @return
+     */
+    @GetMapping("/getTypeByName")
+    public RespBean getTypeByName(String name){
+        return tTypeService.getTypeByName(name);
+    }
+
+    /**
+     * 更新分类
+     * @param tType
+     * @return
+     */
+    @PutMapping("/updateType")
+    public RespBean updateType(@RequestBody TType tType){
+        if (StringUtils.isEmpty(tType.getName())){
+            respBean.setMsg("分类名称不能为空");
+            return respBean;
+        }
+        return tTypeService.updateType(tType);
+    }
+
+    /**
+     * 删除分类
+     * @param id
+     * @return
+     */
+    @DeleteMapping("deleteTypeById")
+    public RespBean deleteTypeById(Long id){
+        return tTypeService.deleteTypeById(id);
+    }
+
+    /**
+     * 根据id查询分类
+     * @param id
+     * @return
+     */
+    @GetMapping("/getTypeById")
+    public RespBean getTypeById(Long id){
+        return tTypeService.getTypeById(id);
     }
 
 }

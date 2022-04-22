@@ -2,6 +2,7 @@ package com.example.blog.service;
 
 import com.example.blog.entity.TType;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.blog.util.RespBean;
 
 /**
  * <p>
@@ -13,4 +14,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface TTypeService extends IService<TType> {
 
+    RespBean pageTypes(Long current, Long size);
+
+    RespBean getTypeByName(String name);
+
+    RespBean deleteTypeById(Long id);
+
+    RespBean updateType(TType tType);
+
+    RespBean getTypeById(Long id);
 }
